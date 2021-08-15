@@ -44,6 +44,8 @@ USED PATTERNS and PRINCIPLES:
 	use Cassandra for audit logging
 	use enterpise messaging architecture
 	write unit test for controllers and services
+	ui tests with jest or enzyme
+	make ui more responsive with bootstrap 4 and meterial design
 	add elk stack for logging
 	use correlationid for tracking
 	use key vault and key valet pattern for appsettings credentials
