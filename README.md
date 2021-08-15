@@ -32,14 +32,15 @@ USED PATTERNS and PRINCIPLES:
 	YAGNI
 	KISS
     
-	USED PACKAGES:
+USED PACKAGES:
 
 	Swashbuckle for open api specification
 	FluenValidation for validations
 	Entity Framework Core
 	Moq for unit tests
   
-	TODOs:
+TODOs:
+	
 	use mediatR and Refit for CQRS pattern
 	use Cassandra for audit logging
 	use enterpise messaging architecture
