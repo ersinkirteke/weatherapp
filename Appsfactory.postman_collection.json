@@ -1,0 +1,72 @@
+{
+	"info": {
+		"_postman_id": "b50ec54a-30ba-45ac-9b51-479a1baec242",
+		"name": "Appsfactory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetByCityName",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/forecast?city=London",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"forecast"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "London"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetByZipCode",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/forecast?zipCode=94040,us",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"forecast"
+					],
+					"query": [
+						{
+							"key": "zipCode",
+							"value": "94040,us"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/history",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"history"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
