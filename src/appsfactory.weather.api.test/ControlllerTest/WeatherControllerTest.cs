@@ -3,9 +3,9 @@ using Xunit;
 
 namespace Appsfactory.Weather.Api.Test
 {
-    public class SchedulerControllerTest
+    public class WeatherControllerTest
     {
-        public SchedulerControllerTest()
+        public WeatherControllerTest()
         {
 
         }
