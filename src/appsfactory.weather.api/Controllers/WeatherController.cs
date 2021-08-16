@@ -23,7 +23,7 @@ namespace Appsfactory.Weather.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("forecast")]
-        public async Task<ActionResult> GetWeatherForecastByCity([FromQuery] string city, [FromQuery] string zipCode)
+        public async Task<ActionResult> GetWeatherForecast([FromQuery] string city, [FromQuery] string zipCode)
         {
             if (!ModelState.IsValid)
             {
