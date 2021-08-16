@@ -37,7 +37,7 @@ namespace Appsfactory.Weather.Api.Services
         {
             WeatherResponse weatherResponse = new WeatherResponse();
             var request = new HttpRequestMessage(HttpMethod.Get,
-           $"{APIUrls.FORECASTURL}?appid={_configuration.GetValue<string>("ApiKey")}&q={city}");
+           $"{APIUrls.FORECASTURL}?appid={_configuration.GetSection("WeatherApi:ApiKey").Value}&q={city}");
 
             var client = _clientFactory.CreateClient();
 
@@ -106,7 +106,7 @@ namespace Appsfactory.Weather.Api.Services
         {
             WeatherResponse weatherResponse = new WeatherResponse();
             var request = new HttpRequestMessage(HttpMethod.Get,
-           $"{APIUrls.FORECASTURL}?appid={_configuration.GetValue<string>("ApiKey")}&zip={zipCode}");
+           $"{APIUrls.FORECASTURL}?appid={_configuration.GetSection("WeatherApi:ApiKey").Value}&zip={zipCode}");
 
             var client = _clientFactory.CreateClient();
 
