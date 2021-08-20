@@ -1,6 +1,8 @@
 <template>
   <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-  <Weather />
+  <div class="container">
+    <router-view />
+  </div>
 </template>
 
 <script>

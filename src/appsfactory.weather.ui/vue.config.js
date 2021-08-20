@@ -1,13 +1,13 @@
 module.exports = {
   devServer: {
     proxy: {
-      "/one": {
+      "/api/weather": {
         target: process.env.VUE_APP_DEVSERVER_WEATHER_API_PROXY,
-        pathRewrite: { "^/one": "" },
+        pathRewrite: { '^/api/weather': '' },
       },
-      "/two": {
+      "/api/identity": {
         target: process.env.VUE_APP_DEVSERVER_IDENTITY_API_PROXY,
-        pathRewrite: { "^/two": "" },
+        pathRewrite: { '^/api/identity': '' },
       },
     },
   },

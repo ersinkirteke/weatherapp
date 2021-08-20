@@ -41,6 +41,7 @@
 
 <script>
 import { AgGridVue } from "ag-grid-vue3";
+import WeatherService from "../services/weather.service";
 
 export default {
   name: "Weather",
@@ -83,12 +84,11 @@ export default {
 
       if (!city) return;
 
-      fetch(`${process.env.VUE_APP_CITY_SEARCH_URL}${city}`)
-        .then((resp) => resp.json())
-        .then((data) => {
+      WeatherService.getByZipCode(city)
+        .then((response) => {
           document.getElementById("zipCode").value = "";
-          if (data.forecasts) {
-            this.rowWeatherData = data.forecasts;
+          if (response.data.forecasts) {
+            this.rowWeatherData = response.data.forecasts;
             result.innerHTML = "";
             this.fetchHistory();
           } else {
@@ -103,12 +103,11 @@ export default {
 
       if (!zipCode) return;
 
-      fetch(`${process.env.VUE_APP_ZIPCODE_SEARCH_URL}${zipCode}`)
-        .then((resp) => resp.json())
-        .then((data) => {
+      WeatherService.getByZipCode(zipCode)
+        .then((response) => {
           document.getElementById("city").value = "";
-          if (data.forecasts) {
-            this.rowWeatherData = data.forecasts;
+          if (response.data.forecasts) {
+            this.rowWeatherData = response.data.forecasts;
             result.innerHTML = "";
             this.fetchHistory();
           } else {
@@ -118,10 +117,10 @@ export default {
         });
     },
     fetchHistory() {
-      fetch(`${process.env.VUE_APP_HISTORY_URL}`)
-        .then((resp) => resp.json())
-        .then((data) => {
-          if (data) this.rowData = data;
+     WeatherService.getHistory()
+        .then((response) => {
+          console.log(response.data);
+          if (response.data) this.rowData = response.data;
         });
     },
   },

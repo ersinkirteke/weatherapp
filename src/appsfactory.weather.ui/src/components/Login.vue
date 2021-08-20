@@ -40,6 +40,7 @@
 
 <script>
 import { Form, Field, ErrorMessage } from "vee-validate";
+import AuthService from "../services/auth.service";
 import * as yup from "yup";
 
 export default {
@@ -68,16 +69,16 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push("/profile");
+      this.$router.push("/weather");
     }
   },
+  beforeCreate() {},
   methods: {
     handleLogin(user) {
       this.loading = true;
-
       this.$store.dispatch("auth/login", user).then(
         () => {
-          this.$router.push("/profile");
+          this.$router.push("/weather");
         },
         (error) => {
           this.loading = false;
@@ -89,6 +90,7 @@ export default {
             error.toString();
         }
       );
+      return AuthService.login(user);
     },
   },
 };

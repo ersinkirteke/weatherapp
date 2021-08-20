@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from "vue-router";
+import { createWebHistory, createRouter,isNavigationFailure, NavigationFailureType  } from "vue-router";
 import Weather from "./components/Weather.vue";
 import Login from "./components/Login.vue";
 
@@ -10,12 +10,12 @@ const routes = [
   },
   {
     path: "/weather",
-    name: "weather",
+    name: "Weather",
     component: Weather,
   },
   {
     path: "/login",
-    name:"login",
+    name:"Login",
     component: Login,
   },
 ];
@@ -26,12 +26,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPages = [];
+  const publicPages = ['/login'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem("user");
   if (authRequired && !loggedIn) {
     next({
-        name: "login"
+        name: "Login"
      })
   } else {
     next();
