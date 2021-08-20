@@ -1,4 +1,7 @@
+using appsfactory.weather.api.test.Constants;
 using Appsfactory.Weather.Api.Controllers;
+using Appsfactory.Weather.Api.DTOs;
+using Appsfactory.Weather.Api.Options;
 using Appsfactory.Weather.Api.Services;
 using Appsfactory.Weather.Domain.Constants;
 using Appsfactory.Weather.Domain.Entities;
@@ -8,6 +11,7 @@ using Appsfactory.Weather.Infrastructure.Context;
 using Appsfactory.Weather.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
 using System;
@@ -54,16 +58,15 @@ namespace Appsfactory.Weather.Api.Test
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(m => m.GetRepository<Forecast>()).Returns(forecastRepositoryMock.Object);
 
-            var configurationMock = new Mock<IConfiguration>();
-            var configurationSectionMock = new Mock<IConfigurationSection>();
-            configurationSectionMock.Setup(a => a.Value).Returns("fcadd28326c90c3262054e0e6ca599cd");
-            configurationMock.Setup(c => c.GetSection(It.IsAny<String>())).Returns(new Mock<IConfigurationSection>().Object);
-            configurationMock.Setup(a => a.GetSection("WeatherApi:ApiKey")).Returns(configurationSectionMock.Object);
+            var optionsMock = Mock.Of<IOptions<WeatherOptions>>(m =>
+                       m.Value.ApiKey == TestConstants.ApiKey &&
+                       m.Value.ApiUrl == TestConstants.ApiUrl);
 
-            var weatherForecastService = new WeatherForecastService(unitOfWorkMock.Object,mockFactory.Object, configurationMock.Object);
-            var controller = new WeatherController(weatherForecastService);
+            var weatherForecastService = new WeatherForecastService(unitOfWorkMock.Object, mockFactory.Object, optionsMock);
+            var controller = new WeatherController(weatherForecastService, optionsMock);
+            WeatherForecastRequest request = new WeatherForecastRequest { City = "London", ZipCode = "" };
             //act
-            var response = await controller.GetWeatherForecast("London", null);
+            var response = await controller.GetWeatherForecast(request);
             //assert
             Assert.NotNull(response);
         }
@@ -95,16 +98,15 @@ namespace Appsfactory.Weather.Api.Test
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(m => m.GetRepository<Forecast>()).Returns(forecastRepositoryMock.Object);
 
-            var configurationMock = new Mock<IConfiguration>();
-            var configurationSectionMock = new Mock<IConfigurationSection>();
-            configurationSectionMock.Setup(a => a.Value).Returns("fcadd28326c90c3262054e0e6ca599cd");
-            configurationMock.Setup(c => c.GetSection(It.IsAny<String>())).Returns(new Mock<IConfigurationSection>().Object);
-            configurationMock.Setup(a => a.GetSection("WeatherApi:ApiKey")).Returns(configurationSectionMock.Object);
+            var optionsMock = Mock.Of<IOptions<WeatherOptions>>(m =>
+                       m.Value.ApiKey == TestConstants.ApiKey &&
+                       m.Value.ApiUrl == TestConstants.ApiUrl);
 
-            var weatherForecastService = new WeatherForecastService(unitOfWorkMock.Object, mockFactory.Object, configurationMock.Object);
-            var controller = new WeatherController(weatherForecastService);
+            var weatherForecastService = new WeatherForecastService(unitOfWorkMock.Object, mockFactory.Object, optionsMock);
+            var controller = new WeatherController(weatherForecastService, optionsMock);
+            WeatherForecastRequest request = new WeatherForecastRequest { City = "", ZipCode = "94040,us" };
             //act
-            var response = await controller.GetWeatherForecast(null, "94040,us");
+            var response = await controller.GetWeatherForecast(request);
             //assert
             Assert.NotNull(response);
         }
@@ -134,12 +136,14 @@ namespace Appsfactory.Weather.Api.Test
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(m => m.GetRepository<Forecast>()).Returns(forecastRepositoryMock.Object);
 
-            var configurationMock = new Mock<IConfiguration>();
+            var optionsMock = Mock.Of<IOptions<WeatherOptions>>(m =>
+                      m.Value.ApiKey == TestConstants.ApiKey &&
+                      m.Value.ApiUrl == TestConstants.ApiUrl);
 
-            var weatherForecastService = new WeatherForecastService(unitOfWorkMock.Object, mockFactory.Object, configurationMock.Object);
-            var controller = new WeatherController(weatherForecastService);
+            var weatherForecastService = new WeatherForecastService(unitOfWorkMock.Object, mockFactory.Object, optionsMock);
+            var controller = new WeatherController(weatherForecastService, optionsMock);
             //act
-            var response = await controller.GetHistory();
+            var response = controller.GetHistory();
             //assert
             Assert.NotNull(response);
         }

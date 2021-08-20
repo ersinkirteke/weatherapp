@@ -7,7 +7,7 @@ namespace Appsfactory.Weather.Api.DTOs
 {
     public class WeatherHistory
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public decimal Temperature { get; set; }
         public decimal Humidity { get; set; }
         public decimal WindSpeed { get; set; }

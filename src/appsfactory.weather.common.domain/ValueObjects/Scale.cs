@@ -19,7 +19,9 @@ namespace Appsfactory.Weather.Domain.ValueObjects
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            throw new NotImplementedException();
+            yield return ScaleUnit;
+            yield return DecimalPlaces;
+            yield return InUse;
         }
     }
 }

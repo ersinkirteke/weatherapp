@@ -15,6 +15,9 @@ namespace Appsfactory.Weather.Infrastructure.Configuration
         {
             builder.HasKey(o => o.Id);
 
+            builder.Property(p => p.Humidity).HasPrecision(18, 2);
+            builder.Property(p => p.WindSpeed).HasPrecision(18, 2);
+            builder.Property(p => p.Humidity).HasPrecision(18, 2);
             builder.OwnsOne(m => m.Address, a =>
             {
                 a.Property(p => p.City).HasMaxLength(150)
@@ -27,6 +30,7 @@ namespace Appsfactory.Weather.Infrastructure.Configuration
 
             builder.OwnsOne(m => m.Temperature, a =>
             {
+                a.Property(p => p.Value).HasPrecision(18, 2);
                 a.OwnsOne(p => p.Scale, a =>
                 {
                     a.Property(p => p.ScaleUnit).HasMaxLength(3)

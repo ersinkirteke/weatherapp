@@ -3,15 +3,19 @@ using Appsfactory.Weather.Api.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Appsfactory.Weather.Api.Options;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Appsfactory.Weather.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class WeatherController : BaseController<WeatherController>
     {
         private readonly IWeatherForecastService _weatherForecastService;
-        public WeatherController(IWeatherForecastService weatherForecastService)
+        public WeatherController(IWeatherForecastService weatherForecastService, IOptions<WeatherOptions> options) : base(options)
         {
             _weatherForecastService = weatherForecastService;
         }
@@ -23,22 +27,30 @@ namespace Appsfactory.Weather.Api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("forecast")]
-        public async Task<ActionResult> GetWeatherForecast([FromQuery] string city, [FromQuery] string zipCode)
+        public async Task<ActionResult> GetWeatherForecast([FromQuery]WeatherForecastRequest weatherForecastRequest)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!string.IsNullOrEmpty(city))
+            if (weatherForecastRequest != null && !string.IsNullOrEmpty(weatherForecastRequest.City))
             {
-                var result = await _weatherForecastService.GetWeatherForecastByCity(city);
-                return Json(result);
+                var result = await _weatherForecastService.GetWeatherForecastByCity(weatherForecastRequest.City);
+
+                if (result != null && result.Forecasts.Count > 0)
+                    return Json(result);
+                else
+                    return NoContent();
             }
-            else if (!string.IsNullOrEmpty(zipCode))
+            else if (weatherForecastRequest != null && !string.IsNullOrEmpty(weatherForecastRequest.ZipCode))
             {
-                var result = await _weatherForecastService.GetWeatherForecastByZipCode(zipCode);
-                return Json(result);
+                var result = await _weatherForecastService.GetWeatherForecastByZipCode(weatherForecastRequest.ZipCode);
+
+                if (result != null && result.Forecasts.Count > 0)
+                    return Json(result);
+                else
+                    return NoContent();
             }
 
             return NoContent();
@@ -46,7 +58,7 @@ namespace Appsfactory.Weather.Api.Controllers
 
         [HttpGet]
         [Route("history")]
-        public async Task<ActionResult> GetHistory()
+        public ActionResult GetHistory()
         {
             if (!ModelState.IsValid)
             {

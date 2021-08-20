@@ -7,14 +7,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System;
-using System.Globalization;
-using System.Text.Json.Serialization;
 using System.Linq;
 using Appsfactory.Weather.Domain.ValueObjects;
 using Appsfactory.Weather.Domain.Constants;
 using Appsfactory.Weather.Api.Extensions;
-using Appsfactory.Weather.Api.Constants;
-using Microsoft.Extensions.Configuration;
+using Appsfactory.Weather.Api.Options;
+using Microsoft.Extensions.Options;
 
 namespace Appsfactory.Weather.Api.Services
 {
@@ -23,13 +21,13 @@ namespace Appsfactory.Weather.Api.Services
         private readonly IRepository<Forecast> _forecastRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpClientFactory _clientFactory;
-        private readonly IConfiguration _configuration;
+        private readonly  WeatherOptions _options;
 
-        public WeatherForecastService(IUnitOfWork unitOfWork, IHttpClientFactory clientFactory, IConfiguration configuration)
+        public WeatherForecastService(IUnitOfWork unitOfWork, IHttpClientFactory clientFactory, IOptions<WeatherOptions>  options)
         {
-            _configuration = configuration;
             _clientFactory = clientFactory;
             _unitOfWork = unitOfWork;
+            _options = options.Value;
             _forecastRepository = _unitOfWork.GetRepository<Forecast>();
         }
 
@@ -37,7 +35,7 @@ namespace Appsfactory.Weather.Api.Services
         {
             WeatherResponse weatherResponse = new WeatherResponse();
             var request = new HttpRequestMessage(HttpMethod.Get,
-           $"{APIUrls.FORECASTURL}?appid={_configuration.GetSection("WeatherApi:ApiKey").Value}&q={city}");
+           $"{_options.ApiUrl}?appid={_options.ApiKey}&q={city}");
 
             var client = _clientFactory.CreateClient();
 
@@ -106,7 +104,7 @@ namespace Appsfactory.Weather.Api.Services
         {
             WeatherResponse weatherResponse = new WeatherResponse();
             var request = new HttpRequestMessage(HttpMethod.Get,
-           $"{APIUrls.FORECASTURL}?appid={_configuration.GetSection("WeatherApi:ApiKey").Value}&zip={zipCode}");
+           $"{_options.ApiUrl}?appid={_options.ApiKey}&zip={zipCode}");
 
             var client = _clientFactory.CreateClient();
 
@@ -180,6 +178,7 @@ namespace Appsfactory.Weather.Api.Services
             {
                 weatherHistories.Add(new WeatherHistory
                 {
+                    Id = item.Id,
                     City = item.Address.City ?? "",
                     ZipCode = item.Address.ZipCode ?? "",
                     Temperature = item.Temperature.Value,
